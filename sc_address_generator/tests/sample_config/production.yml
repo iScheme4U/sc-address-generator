@@ -1,1 +1,29 @@
+env:
+  api_url: "https://www.meiguodizhi.com/api/v1/dz"
+  api_key_city: "city"
+  api_value_city: ""
+  api_key_path: "path"
+  api_value_path: "/cn-address"
+  api_key_method: "method"
+  api_value_method: "refresh"
+  api_content_type: "application/json"
+  api_rst_root_address: "address"
+  api_rst_address: "Address"
+  api_name_address: "街道"
+  api_name_full_address: "地址"
+  api_rst_county: "xian"
+  api_name_county: "区县"
+  api_rst_city: "City"
+  api_name_city: "城市"
+  api_rst_province: "State"
+  api_name_province: "省份"
+  api_name_json: "JSON"
+  generator_count: 10
 
+output:
+  # 生成的目标Excel文件存放路径
+  target_directory: ./
+  # 目标文件名称
+  target_filename: 地址清单.xlsx
+  target_sheet_name: 地址清单
+environment: production
