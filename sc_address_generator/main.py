@@ -32,10 +32,9 @@ from sc_config import ConfigUtils
 from sc_address_generator import PROJECT_NAME, __version__
 import argparse
 import requests
-from bs4 import BeautifulSoup
-import urllib
-import urllib.parse
 import os
+import time
+import random
 
 
 class Runner(metaclass=Singleton):
@@ -91,10 +90,17 @@ class Runner(metaclass=Singleton):
             self._api_name_json,
         ])
         index = 0
-        for index in range(self._generator_count):
+        failed = 0
+        for row_index in range(self._generator_count):
             row = list()
-            addr = self._generate_address()
+            try:
+                addr = self._generate_address()
+            except Exception as e:
+                logging.getLogger(__name__).error("生成地址失败：{} ".format(e))
+                failed += 1
+                continue
             if addr is None:
+                failed += 1
                 continue
             province = ""
             city = ""
@@ -103,9 +109,11 @@ class Runner(metaclass=Singleton):
             full_address = ""
             full_json = addr
             if self._api_rst_root_address not in addr.keys():
+                failed += 1
                 continue
             root_addr_json = addr[self._api_rst_root_address]
             if root_addr_json is None:
+                failed += 1
                 continue
             if self._api_rst_province in root_addr_json.keys():
                 province = root_addr_json[self._api_rst_province]
@@ -124,6 +132,10 @@ class Runner(metaclass=Singleton):
             row.append(full_json)
             df.loc[index] = row
             index = index + 1
+            logging.getLogger(__name__).info("第 %d 次生成成功: %s", index, full_address)
+            time.sleep(random.randint(200, 300) / 1000.0)
+
+        logging.getLogger(__name__).info("生成失败：%d 次", failed)
 
         target_filename_full_path = os.path.join(self._target_directory, self._target_filename)
         # 如果文件已经存在，则删除
@@ -148,14 +160,15 @@ class Runner(metaclass=Singleton):
         headers = {
             "content-type": self._api_content_type,
             "cache-control": "no-cache",
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
         }
+        s = requests.Session()
+        s.headers.update(headers)
         json = {
             self._api_key_city: self._api_value_city,
             self._api_key_method: self._api_value_method,
             self._api_key_path: self._api_value_path,
         }
-        response = requests.post(url=self._api_url, headers=headers, json=json)
+        response = requests.post(url=self._api_url, headers=s.headers, cookies=s.cookies, json=json)
         status_code = response.status_code
         if status_code != 200:
             logging.getLogger(__name__).error("请求失败，错误码：{0}".format(status_code))
