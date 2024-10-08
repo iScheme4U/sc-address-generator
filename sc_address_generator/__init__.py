@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # The MIT License (MIT)
 #
 # Copyright (c) 2023 Scott Lau
@@ -21,12 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# NOTE: This binary is provided for convenience.  It is nice to be able to run
-# the checks from the repository.  This is not included on the releases.  We
-# are using entry_points mechanism on the setup.py.
+__version__ = "0.0.1"
 
-from sys import exit
-
-from sc_templates.main import main
-
-exit(main())
+PROJECT_NAME = 'sc-address-generator'

@@ -45,9 +45,9 @@ with open('README.rst', encoding="utf-8") as fd:
     readme = fd.read()
 
 setup(
-    name='sc-python-templates',
-    version=get_version("sc_templates/__init__.py"),
-    url='https://github.com/Scott-Lau/sc-python-templates',
+    name='sc-address-generator',
+    version=get_version("sc_address_generator/__init__.py"),
+    url='https://github.com/Scott-Lau/sc-address-generator',
     packages=find_packages(),
     author='Scott Lau',
     author_email='exceedego@126.com',
@@ -60,7 +60,7 @@ setup(
     ),
     entry_points={
         'console_scripts': [
-            'sc-python-templates=sc_templates.main:main',
+            'sc-address-generator=sc_address_generator.main:main',
         ],
     },
     classifiers=[
@@ -82,7 +82,7 @@ setup(
         'sc-config>=0.0.11',
     ],
     package_data={
-        'sc_templates': ['tests/sample_config/*'],
+        'sc_address_generator': ['tests/sample_config/*'],
     },
     include_package_data=True,
 )
